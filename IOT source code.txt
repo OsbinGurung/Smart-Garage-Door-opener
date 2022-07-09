@@ -1,0 +1,72 @@
+Source code
+#include <Servo.h>
+Servo myServo1;// Servo for entry
+Servo myServo2;//Servo for exit
+int servoPin1 = 12;//Pin for servo 1
+int servoPin2 = 13;// Pin for servo 1
+int ledPin = 11;// Pin for Led
+int echoPin=10;//Echo Pin of Ultrasonic sensor
+long duration;//Variable to store the time duration of ultrasonic wave to transmit and
+receive
+int distance;//Variable to store the distance after calculation
+int pirPin = 2;//Pin for PIR sensor
+int buttonPin = 3;// Pin for Btn
+int buttonState = 0;// initalising buttonState
+
+void setup() {
+pinMode(trigPin, OUTPUT);//Set trigPin as output pin
+pinMode(echoPin, INPUT);//Set echoPin as input pin
+pinMode(servoPin1, OUTPUT);//Set servoPin1 as output pin
+pinMode(servoPin2, OUTPUT);//Set servoPin2 as output pin
+pinMode(pirPin,INPUT);//Set pirPin as input pin
+pinMode(buttonPin, INPUT);//Set buttonPin as input pin
+
+
+myServo1.attach(servoPin1);//Assigning ServoPin1 to myservo1
+myServo2.attach(servoPin2);//Assigning ServoPin2 to myservo2
+Serial.begin(9600);//starts serial communication
+}
+
+void loop() {
+//for PIR
+int val = digitalRead(pirPin);// to store input from PIR sensor
+if (val == HIGH)//Condition for motion ditection
+{
+digitalWrite(ledPin,HIGH);// Turning LED on
+}
+else
+{
+digitalWrite(ledPin,LOW);// Turning LED off
+}
+//for Ultrasonic
+//Imitting Ultrasonic rays from trigPin
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+
+
+duration=pulseIn(echoPin, HIGH); //Reciving Ultrasonic rays by echopin
+distance=duration*0.034/2;//Formula to convert the ultrasonic time into centimeters
+if(distance<=5)// Condition for distance being less than or equals to 5 cm
+{
+myServoIN.write(90);//Rotate servo 90 degree or open the door
+delay(10000);// Leave the door open for 10 seconds
+}
+else
+{
+myServoIN.write(0);//Close the door
+}
+
+//For PushButton
+buttonState = digitalRead(buttonIN);
+if (buttonState == HIGH)//Condition for button being pressed
+{
+myServoOUT.write(90);//Rotate servo 90 degree or open the door
+}
+else
+{
+myServoOUT.write(0);//Close the door
+}
+}
